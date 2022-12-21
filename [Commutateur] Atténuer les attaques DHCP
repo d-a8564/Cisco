@@ -1,0 +1,13 @@
+Il faut utiliser l'espionnage DHCP
+
+Étapes pour implémenter l'espionnage DHCP
+Utilisez les étapes suivantes pour activer l'espionnage DHCP (snooping):
+
+
+-Étape 1. Activez l'espionnage DHCP à l'aide de la commande de configuration globale # ip dhcp snooping .
+
+-Étape 2. Sur les ports approuvés, configurez l'interface avec la commande # ip dhcp snooping trust.
+
+-Étape 3: Limitez le nombre de messages de découverte DHCP pouvant être reçus par seconde sur les ports non approuvés à l'aide de la commande de configuration d'interface # ip dhcp snooping limit rate .
+
+-Étape 4. Activez la surveillance DHCP par VLAN ou par une plage de VLAN à l'aide de la commande de configuration globale # ip dhcp snooping vlan.
