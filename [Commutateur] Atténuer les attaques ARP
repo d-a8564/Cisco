@@ -1,0 +1,39 @@
+Pour atténuer les risques d'usurpation ARP et d'empoisonnement ARP, suivez ces directives d'implémentation DAI:
+
+Activez globalement L'espionnage DHCP (snooping ).
+Activer l'espionnage DHCP sur les VLAN sélectionnés.
+Activer l'inspection ARP dynamique (DAI) sur les VLAN sélectionnés.
+Configurer les interface approuvées avec l'espionnage DHCP et l'inspection ARP.
+
+Il est généralement conseillé de configurer tous les ports de commutateur d'accès comme non approuvés et de configurer tous les ports de liaison montante qui sont connectés à d'autres commutateurs comme approuvés.
+
+-L'espionnage DHCP est activée car DAI nécessite la table de liaison d'espionnage DHCP pour fonctionner. Ensuite, la surveillance DHCP et l'inspection ARP sont activés pour les PC sur VLAN10. Le port de liaison montante vers le routeur est approuvé et est donc configuré comme approuvé pour l'espionnage DHCP et l'inspection ARP.
+
+S1(config)# ip dhcp snooping
+S1(config)# ip dhcp snooping vlan 10
+S1(config)# ip arp inspection vlan 10
+S1(config)# interface fa0/24
+S1(config-if)# ip dhcp snooping trust
+S1(config-if)# ip arp inspection trust
+
+L'inspection ARP dynamique (DAI) peut être configuré pour examiner la destination ou la source des adresses MAC et IP :
+
+-MAC de destination -vérifie l'adresse MAC de destination dans l'en-tête Ethernet par rapport à l'adresse MAC cible dans le corps ARP.
+-Source MAC - Vérifie la source Adresse MAC dans l’en-tête Ethernet contre l'expéditeur Adresse MAC dans le corps ARP.
+-Adresse IP - Vérifie le corps ARP pour incorrecte et inattendues adresse IP y compris l’adresses 0.0.0.0, 255.255.255.255 et tous les adresses multidiffusion IP.
+
+La commande de configuration globale ip arp inspection validate {[src-mac][dst-mac] [ip]} est utilisée pour configurer DAI pour supprimer les paquets ARP lorsque les adresses IP ne sont pas valides. Il peut être utilisé lorsque les adresses MAC dans le corps des paquets ARP ne correspondent pas aux adresses spécifiées dans l'en-tête Ethernet. Remarquez dans l'exemple suivant comment une seule commande peut être configurée. Par conséquent, la saisie de plusieurs commandes ip arp inspection validate écrase la commande précédente. Pour inclure plusieurs méthodes de validation, saisissez-les sur la même ligne de commande comme indiqué et vérifié le résultat suivante.
+
+S1(config)# ip arp inspection validate ?
+dst-mac  Validate destination MAC address
+  ip       Validate IP addresses
+  src-mac  Validate source MAC address
+S1(config)# ip arp inspection validate src-mac
+S1(config)# ip arp inspection validate dst-mac
+S1(config)# ip arp inspection validate ip
+S1(config)# do show run | include validate
+ip arp inspection validate ip 
+S1(config)# ip arp inspection validate src-mac dst-mac ip
+S1(config)# do show run | include validate
+ip arp inspection validate src-mac dst-mac ip 
+S1(config)#
