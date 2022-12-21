@@ -1,0 +1,44 @@
+Configurer et sécuriser les routeurs et commutateur Cisco
+
+---------------------------~~^_^~~------------------------------
+
+Les Étapes pour atténuer les attaques par sauts de VLAN
+
+Utilisez les étapes suivantes pour atténuer les attaques par saut de VLAN:
+
+Étape 1: désactivez les négociations DTP (jonction automatique) sur les ports sans trunc à l'aide de la commande de configuration de l'interface switchport mode access .
+
+Étape 2: désactivez les ports inutilisés et placez-les dans un VLAN inutilisé.
+
+Étape 3: Activez manuellement la liaison de jonction sur un port de jonction à l'aide de la commande switchport mode trunk .
+
+Étape 4: désactivez les négociations DTP (trunking automatique) sur les ports de jonction à l'aide de la commande switchport nonegotiate .
+
+Étape 5: définissez le VLAN natif sur un VLAN autre que VLAN 1 à l'aide de la commande switchport trunk native vlan vlan_number.
+
+Par exemple, supposez ce qui suit:
+
+Les ports FastEthernet 0/1 à fa0 / 16 sont des ports d'accès actifs
+Les ports FastEthernet 0/17 à 0/24 ne sont pas actuellement utilisés
+53/5000 Les ports FastEthernet 0/21 à 0/20 sont des ports de trunc.
+Le saut de VLAN peut être atténué en mettant en œuvre la configuration suivante.
+
+S1(config)# interface range fa0/1 - 16
+S1(config-if-range)# switchport mode access
+S1(config-if-range)# exit
+S1(config)# 
+S1(config)# interface range fa0/17 - 20
+S1(config-if-range)# switchport mode access
+S1(config-if-range)# switchport access vlan 1000
+S1(config-if-range)# shutdown
+S1(config-if-range)# exit
+S1(config)# 
+S1(config)# interface range fa0/21 - 24
+S1(config-if-range)# switchport mode trunk
+S1(config-if-range)# switchport nonegotiate
+S1(config-if-range)# switchport trunk native vlan 999
+S1(config-if-range)# end
+S1#
+Les ports FastEthernet 0/1 à 0/16 sont des ports d'accès donc trunking est désactivée en leur faisant explicitement des ports d'accès.
+Les ports FastEthernet 0/17 à 0/20 sont des ports inutilisés et sont désactivés et affectés à un VLAN inutilisé.
+Les ports FastEthernet 0/21 à 0/24 sont des liaisons de trunc et sont activés manuellement en tant que truncs avec DTP désactivé. Le VLAN natif passe également du VLAN 1 par défaut à un VLAN 999 inutilisé.
