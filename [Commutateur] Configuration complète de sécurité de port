@@ -19,7 +19,7 @@ Aging Type                 : Absolute
 SecureStatic Address Aging : Disabled
 Maximum MAC Addresses      : 2
 Total MAC Addresses        : 2
-Configured MAC Addresses   : 1
+Configured MAC Addresses   : 1 
 Sticky MAC Addresses       : 1
 Last Source Address:Vlan   : a41f.7272.676a:1
 Security Violation Count   : 0
